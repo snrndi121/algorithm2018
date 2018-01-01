@@ -1,3 +1,3 @@
-# work
-- | w11047       | "meeting rooms"                |
-- | w1931        | "mimum number of coins"        |
+# work table
+-  w11047 : "meeting rooms"        
+-  w1931 : "mimum number of coins"
