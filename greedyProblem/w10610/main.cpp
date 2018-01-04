@@ -1,95 +1,82 @@
 #include <iostream>
 #include <string>
-#include <stack>
 #include <algorithm>
 
 using namespace std;
 
+/* def */
+#define N 30
+
 /* var */
-const int N = 30;
-string str;
+string s;
 
 /* func */
-void input_read();
-int find_maximum();
-void swap(string& s, int i, int j);
+void input_read(void);
+int counterStr(void);
+int IsLowerIn(string& CGroup, char item);
 int isMultiple(const string& s);
-int isLowerIn(string& s, char item);
-string stackTostr(stack < char > sstack);
 
-void print_stack(stack < char > s);
+/* To solve this */
+/*
+  Sort the input string 's' in big order. For example, input : 1234 then make it into '4321'.
+  Because we have to find the largest number which is a multiple of 30. After that, Check the
+  current combination where it is a mulitiple of 30
 
+  To do : But this algorithm, now, is overtime. Therefore we should reduce the time.
+*/
 int main()
 {
     input_read();
 
-    int res=find_maximum();
-    cout << res;
+    int res=counterStr();
+    cout << res << endl;
+
+    return 0;
 }
-void input_read()
+void input_read(void)
 {
-    cin >> str;
-    sort(str.begin(), str.end(), greater < char >());
+    cin >> s;
+    sort(s.begin(), s.end(), greater < char > ());
 }
-int find_maximum()
+int counterStr(void)
 {
-    if(str.size() < 2) { return -1;}
-    //Init_stack
-    stack < char > strStack;
-    for(unsigned i=0; i < str.size(); ++i)
-    {
-        strStack.push(str[i]);
-    }
-    //init
-    string s=stackTostr(strStack);
-    int res=isMultiple(s);
-    if(res != -1) { return res;}
-    cout << " base :" << s << endl;
-    //find nextnumber by descent
-    string CGroup;
-    while(!strStack.empty())
-    {
-        //set next str
-        char stackTop=strStack.top();
-        int i=isLowerIn(CGroup, stackTop);
-        cout << endl;
-        if(i != -1)
-        {
-            //part1. Switch(cur_top, new_top)
-            strStack.pop();
-            strStack.push(CGroup[i]);
+      if(s.size() < 2) { return -1;}
 
-            print_stack(strStack);
-            cout << " >> " << CGroup[i] << " is in G(" << i << ")" << endl;
-            cout << " >> it will switch " << stackTop << endl;
-            CGroup[i]=stackTop;
+      int res=isMultiple(s);
+      if(res != -1) { return res;}
 
-            //part2. CGroup.sort()
-            sort(CGroup.begin(), CGroup.end(), greater < char >());
-            cout << " >> CGroup size : " << CGroup.size() << endl;
+      string temp;
+      while(!s.empty())
+      {
+            char c = s.back();
+            int res=IsLowerIn(temp, c);
+            if(res != -1)
+            {
+                s.pop_back();
+                s.push_back(temp[res]);
+                temp[res]=c;
 
-            //part3. Push CGroup all into strStack
-            for(int j=0; (unsigned) j < CGroup.size(); ++j) { strStack.push(CGroup[j]);}
-            CGroup.clear();
-            print_stack(strStack);
+                sort(temp.begin(), temp.end(), greater <char>());
 
-            //part4. Set current number by a new string
-            string s=stackTostr(strStack);
-            //part5. Check its multiplicity
-            int res=isMultiple(s);
-            cout << " s :" << s << ", res :" << res << endl;
-            if(res != -1) { return res;}
+                //part3. Push CGroup all into s
+                for(int j=0; (unsigned) j < temp.size(); ++j) { s.push_back(temp[j]);}
+
+                temp.clear();
+
+                //part5. Check its multiplicity
+                int res=isMultiple(s);
+
+                if(res != -1) { return res;}
+            } else {
+                //part1. Set temp
+                //if there is no lower value in the temp about the current top
+                s.pop_back();
+                temp.push_back(c);
+            }
         }
-        else {
-            //part1. Set CGroup
-            //if there is no lower value in the CGroup about the current top
-            strStack.pop();
-            CGroup.push_back(stackTop);
-        }
-    }
-    return -1;
+        return -1;
 }
-int isLowerIn(string& cgroup, char item)
+int IsLowerIn(string& cgroup, char item)
 {
     for(int i=0; (unsigned) i < cgroup.size(); ++i)
     {
@@ -100,36 +87,8 @@ int isLowerIn(string& cgroup, char item)
     }
     return -1;
 }
-string stackTostr(stack < char > sstack)
-{
-    //stack - > string
-    string s;
-    while(!sstack.empty())
-    {
-        char c=sstack.top();
-        sstack.pop();
-        s.insert(s.begin(), c);
-    }
-    return s;
-}
 int isMultiple(const string& s)
 {
     int snum=atoi(s.c_str()); //stoi(s);
-    return (snum % N == 0)? snum : -1;
-}
-void swap(string& s, int i, int j)
-{
-    char temp=s[i];
-    s[i]=s[j];
-    s[j]=temp;
-}
-void print_stack(stack < char > s)
-{
-    cout << endl;
-    while(!s.empty())
-    {
-        char ctop=s.top();
-        s.pop();
-        cout << ctop << " - ";
-    }
+    return (snum!=0 && snum % N == 0)? snum : -1;
 }
