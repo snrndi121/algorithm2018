@@ -1,3 +1,18 @@
+/* origin of source : https://github.com/Mushu92/Baekjoon/blob/master/Dp/Steps.cpp
+/* comment : uki408 */
+/* To solve this
+*
+
+  * The point is that we must step the last stair.
+  * ----------------------------------------------
+  * |    i -3    |   i - 2   |   i - 1   |   i   |
+  * ----------------------------------------------
+  *
+  * Therefore, There two cases exist, "[ i ] after [ i - 1 ]" and "[ i ] after [ i - 2 ]".
+  * Course, We should add the proper accumulated cost for each case.
+  * First of all, [ 0 ~ 2 ] stairs and accumulated cost are initialized.
+
+*/
 #include <iostream>
 #include <vector>
 
@@ -6,15 +21,20 @@ using namespace std;
 /* def */
 /* var */
 int sizeOfstairs;
-vector < int > stairs;
+vector < int > stairs;  //Info about stairs' cost
+vector < int > accumWeight; //Accumulated cost by stairs[i]
 
 /* func */
 void input_read();
 void step_stairs();
+void print_answer();
+
 int main(void)
 {
     input_read();
     step_stairs();
+    print_answer();
+
     return 0;
 }
 void input_read()
@@ -22,6 +42,7 @@ void input_read()
     int i=0;
     cin >> sizeOfstairs;
     stairs.reserve(sizeOfstairs);
+	  accumWeight.reserve(sizeOfstairs);
 
     while(i < sizeOfstairs)
     {
@@ -30,74 +51,20 @@ void input_read()
 }
 void step_stairs()
 {
-  if( sizeOfstairs > 0)
-  {
-        int* accum_weight = new int[sizeOfstairs];
-        bool* visit = new bool[sizeOfstairs];
-        accum_weight[0] = stairs[sizeOfstairs - 1];
-        int twostepCount = 1;
-        for ( int i = 0; i < sizeOfstairs - 1; ++i) { visit[i] = false;}
-        visit[sizeOfstairs - 1] = true;
+    /* Initialize */
+    accumWeight.push_back(stairs[0]); //accumWeight[0]
+    accumWeight.push_back(max(stairs[1], stairs[0] + stairs[1])); //accumWeight[1]
+    accumWeight.push_back(max(stairs[0] + stairs[2], stairs[1] + stairs[2])); //accumWeight[2]
 
-        for (int i = 1; i < sizeOfstairs; ++i)
-        {
-              int target = sizeOfstairs - (i + 1);
-              //cout << "\n > current back_stairs :" << stairs[target] << endl;
-              //cout << " > tsc :" << twostepCount;
-              if (twostepCount == 0)
-              {
-                  accum_weight[i] = accum_weight[i - 1] + stairs[target];
-                  twostepCount++;
-                  visit[target] = true;
-                  //cout << "->" << twostepCount << endl;
-              }
-              else if (twostepCount == 1)
-              {
-                  accum_weight[i] = accum_weight[i - 1] + stairs[target];
-                  twostepCount++;
-                  visit[target] = true;
-                  //cout << "->" << twostepCount << endl;
-              }
-              else  /* selection event */
-              {
-                  if ((target + 2 != sizeOfstairs -1)
-                  && stairs[target + 2] < stairs[target + 1]
-                  && stairs[target + 2] < stairs[target])
-                  {   /* target > target +1 > target + 2*/
-                      visit[i] = true;
-                      //cout << "->" << twostepCount << endl;
-                      //cout << " > ,swithching :" << stairs[target] << endl;
-                      //cout << " > " << stairs[target + 2] << ", Is visit? " << visit[target + 2] << endl;
-                      if ( visit[target + 3] != false)
-                      {
-                          accum_weight[i] = accum_weight[i - 3] + stairs[target] + stairs[target + 1];
-                          visit[target + 3] = false;
-                      }
-                      else
-                      {
-                          accum_weight[i] =  accum_weight[i -3] + stairs[target] + stairs[target + 2];
-                          visit[target + 1] = false;
-                      }
-                  }
-                  else if(stairs[target] > stairs[target + 1])
-                  {   /* target > target +1 */
-                      twostepCount--;
-                      visit[target] = true;
-                      accum_weight[i] = accum_weight[i-2] + stairs[target];
-                      //cout << "->" << twostepCount << endl;
-                      //cout << " > ,then selec :" << stairs[target] << endl;
-                  }
-                  else
-                  {   /* target < target +1 */
-                      twostepCount = 0;
-                      accum_weight[i] = accum_weight[i-1];
-                      //cout << "->" << twostepCount << endl;
-                      //cout << " > ,then select :" << stairs[target - 1] << endl;
-                  }
-              }
-              //cout << " > accum :" << accum_weight[i] << endl;
-        }
-        cout << accum_weight[sizeOfstairs - 1] << endl;
+    /* Exploring stairs */
+    for (int i = 3; i < sizeOfstairs; ++i)
+    {
+        accumWeight.push_back(max(accumWeight[i - 2] + stairs[i], //case(1) : [ i ] after [i - 2]
+                            accumWeight[i - 3] + stairs[i - 1] + stairs[i])); //case(2) : [ i ] after [i - 1]
     }
-    else cout << 0;
+}
+void print_answer()
+{
+    int answer = accumWeight.size() - 1;
+    cout << accumWeight[answer] << endl;
 }
