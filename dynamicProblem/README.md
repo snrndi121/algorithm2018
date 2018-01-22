@@ -4,3 +4,4 @@
 - w1932 : "maximum path while searching points"
 - w2579 : "Climbing stairs by accumulated cost"
 - w1463 : "Count operation call"
+- w2293 : "Number of case about coin exchanges
