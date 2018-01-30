@@ -1,5 +1,4 @@
 #include <iostream>
-#include <list>
 #include <vector>
 #include <queue>
 
@@ -8,7 +7,7 @@ using namespace std;
 /* var */
 int goal;
 vector < int > indegree;
-vector < list < int > > rules;
+vector < vector < int > > rules;
 vector < int > delay;
 vector < int > res;
 
@@ -36,7 +35,9 @@ void input_read()
     int i = 0 , numOfBuliing = 0, numOfrules = 0, x = 0, y = 0;
     cin >> numOfBuliing >> numOfrules;
     indegree.resize(numOfBuliing);
-    rules.resize(numOfrules);
+    rules.resize(numOfBuliing);
+
+    for(int k=0; k<numOfrules; ++k) { rules[k] = vector < int >();}
 
     /* Get info about cost of buildings */
     int _d = 0;
@@ -60,8 +61,7 @@ void building_craft()
     queue < int > searchQue;
     vector < int  > weight;
     unsigned sz = indegree.size();
-    weight.resize(goal + 1);
-
+    weight.resize(sz);
     /* Set searchQue */
     for (unsigned i=0; i < sz; ++i)
     {
@@ -71,21 +71,29 @@ void building_craft()
     weight[top] = delay[top];
 
     /* Set resQue */
-    while (!searchQue.empty() && top != goal)
+    //cout << ">> init_top :" << top << endl;
+    //cout << ">> init_indegree :" << indegree[top] << endl;
+    while (!searchQue.empty())
     {
         top = searchQue.front();
         searchQue.pop();
-
+        //cout << " >> cur_top :" << top << endl;
         /*step2. Set siblings from li[i] */
-        for (list < int >::iterator it = rules[top].begin(); it != rules[top].end(); ++it)
+        //cout << " >> siblings : ";
+        for (vector < int >::iterator it = rules[top].begin(); it != rules[top].end(); ++it)
         {
             int child = (*it);
+            //cout << child << "-";
             indegree[child]--;
             weight[child] = max(weight[child], weight[top] + delay[child]);
+            //cout << weight[child] << endl;
             if (indegree[child] == 0) { searchQue.push(child);}
         }
+        //cout << endl;
     }
+    //cout << ">> setQue_done " << endl;
     res.push_back(weight[goal - 1]);
+    //cout << ">> save " << endl;
 }
 void print_res()
 {
