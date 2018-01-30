@@ -141,15 +141,15 @@ void building_craft(craft& c)
         /* step3. Add sibling into searchQue */
         if(searchQue.empty())
         {
-            //cout << " >> siblings :";
+            cout << " >> siblings :";
             int maxOfsibling = 0;
             for (list < int >::iterator it = siblings.begin(); it != siblings.end(); ++it)
             {
-                //cout << (*it) + 1 << '(' << c.getDelay(*it) << ") ";
+                cout << (*it) + 1 << '(' << c.getDelay(*it) << ") ";
                 maxOfsibling =  max(maxOfsibling, c.getDelay(*it));
                 searchQue.push(*it);
             }
-            //cout << endl;
+            cout << endl;
             siblings.clear();
             currentCost += maxOfsibling;
         }
