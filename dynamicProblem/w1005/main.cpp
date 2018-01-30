@@ -102,59 +102,37 @@ void building_craft(craft& c)
 {
     /* Initializing */
     queue < int > searchQue;
-    vector < int > indegree;
-    int sz = c.getIndegree(indegree), currentCost = 0, goal = c.getGoal();
+    vector < int > indegree, weight;
+    int sz = c.getIndegree(indegree), goal = c.getGoal();
+    weight.resize(goal + 2);
 
     /* Set searchQue */
     for ( int i=0; i<sz; ++i)
     {
         if (indegree[i] == 0) { searchQue.push(i);}
     }
-    currentCost = c.getDelay(searchQue.front());
-    list < int > siblings;
+    int top = searchQue.front();
+    weight[top] = c.getDelay(top);
 
     /* Set resQue */
     while (!searchQue.empty() && searchQue.front() != goal)
     {
-        int indexOftop = searchQue.front();
+        top = searchQue.front();
         searchQue.pop();
-
         /* step1. Get list of rules[i] */
         list < int > li;
-        c.getRules(indexOftop, li); //get Rules form class craft which have the 'indexOftop' index.
+        c.getRules(top, li); /* get Rules form class craft which have the 'indexOftop' index.*/
 
         /*step2. Set siblings from li[i] */
         for (list < int >::iterator it = li.begin(); it != li.end(); ++it)
         {
             int child = (*it);
             indegree[child]--;
-            /*
-            if ((indegree[child] == 0 && !c.getRules(child))
-              ||(indegree[child] == 0 && child == goal))
-            */
-            if (indegree[child] == 0 && (!c.getRules(child) || child == goal))
-            {
-                siblings.push_back(child);
-            }
-        }
-
-        /* step3. Add sibling into searchQue */
-        if(searchQue.empty())
-        {
-            //cout << " >> siblings :";
-            int maxOfsibling = 0;
-            for (list < int >::iterator it = siblings.begin(); it != siblings.end(); ++it)
-            {
-                //cout << (*it) + 1 << '(' << c.getDelay(*it) << ") ";
-                maxOfsibling =  max(maxOfsibling, c.getDelay(*it));
-                searchQue.push(*it);
-            }
-            //cout << endl;
-            siblings.clear();
-            currentCost += maxOfsibling;
+            weight[child] = max(weight[child], weight[top] + c.getDelay(child));
+            if (indegree[child] == 0) { searchQue.push(child);}
         }
     }
-    res.push_back(currentCost);
+    res.push_back(weight[goal]);
 }
 void print_res()
 {
