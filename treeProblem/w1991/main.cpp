@@ -3,7 +3,17 @@
 #include <vector>
 
 using namespace std;
-
+/* To sovle this */
+/*
+ * You need to know about traversals of tree. It is simple.
+ * As you know, the each order of searchi is below.
+ * _(1) Preorder : root -> left child -> right childi_
+ * _(2) Inorder : left child -> root > right child_
+ * _(3) Postorder : left child -> right child -> root_
+ * 
+ * In this case, you do not have to make tree. Instead, there is matrix [x][3] in vector < node >. Check declarations of type.
+ * For example, Look at a functions of preorder.
+*/
 /* def */
 typedef pair < char, char > child;
 typedef pair < char, child > node;
@@ -25,16 +35,6 @@ int main()
 	input_read();
 	treeSearching();
 	return 0;
-}
-void printVector()
-{
-	for (vector < node >::iterator it = input.begin();
-			it != input.end(); ++it)
-	{
-		node item = *it;
-		cout << item.first << ' '<< item.second.first << ' ' << item.second.second << endl;
-	}
-	cout << endl;
 }
 void input_read()
 {
@@ -62,6 +62,15 @@ void treeSearching()
 	postorder('A');
 	cout << endl;
 }
+/******** **Look** ********/
+/* 
+ * "A process of preorder" 
+ * This is recursive implement.(the root is A)
+ * A preorder calls first a root. Then it will call preorder(leftchild) and a new preorder is going to print itself.
+ * It continues to repeat until its contents is '.'. After '.', it calls preorder(rightchild). (the next process is same with the left) 
+ * If the right process meet '.', the next recursive will be ready to return; 
+ * 
+*/
 void preorder(char _node) 
 {
 	int i = _node - 'A';
