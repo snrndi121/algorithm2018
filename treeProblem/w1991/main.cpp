@@ -5,7 +5,8 @@
 using namespace std;
 
 /* def */
-typedef pair < char, char* > node;
+typedef pair < char, char > child;
+typedef pair < char, child > node;
 
 /* func */
 void input_read(); 
@@ -15,14 +16,7 @@ void preorder(char _node);
 void inorder(char _node);
 void postorder(char _node);
 
-void printVector()
-{
-	for (vector < node >::iterator it = input.begin();
-			it != input.end(); ++it)
-	{
-		cout << it.first << endl;
-	}
-}
+void printVector();
 /* var */
 vector < node > input;
 
@@ -31,6 +25,16 @@ int main()
 	input_read();
 	treeSearching();
 	return 0;
+}
+void printVector()
+{
+	for (vector < node >::iterator it = input.begin();
+			it != input.end(); ++it)
+	{
+		node item = *it;
+		cout << item.first << ' '<< item.second.first << ' ' << item.second.second << endl;
+	}
+	cout << endl;
 }
 void input_read()
 {
@@ -43,11 +47,9 @@ void input_read()
 	for (int i=0; i< num; ++i)
 	{
 		cin >> parent >> child[0] >> child[1];
-		input.push_back(make_pair(parent, child));	
+		input.push_back(make_pair(parent, make_pair(child[0], child[1])));	
 	}	
-	printVector();
 	sort(input.begin(), input.end(), sortByparent);
-	printVector();
 }
 void treeSearching()
 {
@@ -62,35 +64,34 @@ void treeSearching()
 }
 void preorder(char _node) 
 {
-	unsigned char i = _node - 65;
-	char* _child = input[i].second;
+	int i = _node - 'A';
+	char _left = input[i].second.first, _right = input[i].second.second;
 
 	if (_node == '.')
 		return ;
 	cout << (char)_node;
-	preorder(_child[0]);
-	preorder(_child[1]);
+	preorder(_left);
+	preorder(_right);
 }
 void inorder(char _node)
 {
 	unsigned char i = _node - 65;
-	char* _child = input[i].second;
+	char _left = input[i].second.first, _right = input[i].second.second;
 
 	if (_node == '.')
 		return ;
-	inorder(_child[0]);
+	inorder(_left);
 	cout << (char)_node;
-	inorder(_child[1]);
+	inorder(_right);
 }
 void postorder(char _node)
 {
 	unsigned char i = _node - 65;
-	char* _child = input[i].second;
+	char _left = input[i].second.first, _right = input[i].second.second;
 
 	if (_node == '.')
 		return ;
-	postorder(_child[0]);
-	postorder(_child[1]);
+	postorder(_left);
+	postorder(_right);
 	cout << (char)_node;
 }
-
