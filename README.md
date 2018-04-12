@@ -8,7 +8,7 @@
  - refactor **contents** : when you modified the most of codes and its structures.  
  - docs **contents** : when you changes or modified a README.md.
 
- **contents** : the content's form will be same normally, "number"_"category". If it is hard, then you can type its contents briefly.
+ **contents** : the content's form will be same normally, "category"_"number". If it is hard, then you can type its contents briefly.
 
 # Email
  - snrndi4521@gmail.com
