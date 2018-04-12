@@ -1,64 +1,84 @@
-/* preorder, inorder, postorder */
-
 #include <iostream>
-#include <vector>
-#include <algorithm>
+#include <list>
 
 using namespace std;
+
 /* def */
-typedef pair < char, char > pType_char;
-/* var */
-vector < pType_char > input;
-int numOfnode;
 
 /* func */
 void input_read();
-void searching_tree();
-void preorder(const char base);
-int getIndex(const char c);
+void treeSearching();
+void preorder(char _node);
+void inorder(char _node);
+void postorder(char _node);
+
+/* var */
+char** input = NULL;
+
 int main()
 {
 	input_read();
-	searching_tree();
+	treeSearching();
 	return 0;
 }
 void input_read()
 {
-		int i = 0;
-		cin >> numOfnode;
-		input.resize(numOfnode);
-		while(i++ < numOfnode)
-		{
-				char _parent, _leftchild, _rightchild;
-				cin >> _parent >> _leftchild >> _rightchild;
-				input.push_back(make_pair(_leftchild, _rightchild));
-		}
-}
-void searching_tree()
-{
-		// preorder : root - left - right
-		preorder('A');
-		// inorder : left - root - right
+	/* Init Input_data */
+	int num;
+	cin >> num;
+	
+	input = new char*[2];
+	for (int i=0; i<num; ++i)
+	{
+		input[i] = new char[2];	
+	}
 
-		// postorder : left - right - root
+	/* Get input */
+	char p, l, r;
+	for (int i=0; i< num; ++i)
+	{
+		cin >> p >> l >> r;
+		input[i][0] = l;
+		input[i][1] = r;
+	}	
 }
-void preorder(const char base)
+void treeSearching()
 {
-		cout << " >> base :" << base << endl;
-		int i = getIndex(base);
-		cout << " >> i :" << i << endl;
-		if (i != -1)
-		{
-				cout << base << endl;
+	preorder('A');
+	cout << endl;
 
-				preorder(input[i].first);	//left
-				preorder(input[i].second); //right
-		}
+	inorder('A');
+	cout << endl;
+
+	postorder('A');
+	cout << endl;
 }
-int getIndex(const char tar)
+void preorder(char _node) 
 {
-		cout << ">> getindex of :" << tar << endl;
-		if (tar == '.') return -1;
-		const int base = (char)'A';
-		return (int)tar - base;
+	unsigned char i = _node - 65;
+
+	if (_node == '.')
+		return ;
+	cout << (char)_node;
+	preorder(input[i][0]);
+	preorder(input[i][1]);
 }
+void inorder(char _node)
+{
+	unsigned char i = _node - 65;
+	if (_node == '.')
+		return ;
+	inorder(input[i][0]);
+	cout << (char)_node;
+	inorder(input[i][1]);
+}
+void postorder(char _node)
+{
+	unsigned char i = _node - 65;
+	if (_node == '.')
+		return ;
+	postorder(input[i][0]);
+	postorder(input[i][1]);
+	cout << (char)_node;
+}
+
