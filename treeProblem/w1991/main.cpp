@@ -1,19 +1,22 @@
 #include <iostream>
-#include <list>
+#include <algorithm>
+#include <vector>
 
 using namespace std;
 
 /* def */
+typedef pair < char, char* > node;
 
 /* func */
-void input_read();
+void input_read(); 
+bool sortByparent(node& a, node& b) { return a.first < b.first; }
 void treeSearching();
 void preorder(char _node);
 void inorder(char _node);
 void postorder(char _node);
 
 /* var */
-char** input = NULL;
+vector < node > input;
 
 int main()
 {
@@ -26,21 +29,15 @@ void input_read()
 	/* Init Input_data */
 	int num;
 	cin >> num;
-	
-	input = new char*[2];
-	for (int i=0; i<num; ++i)
-	{
-		input[i] = new char[2];	
-	}
 
 	/* Get input */
-	char p, l, r;
+	char parent, child[2];
 	for (int i=0; i< num; ++i)
 	{
-		cin >> p >> l >> r;
-		input[i][0] = l;
-		input[i][1] = r;
+		cin >> parent >> child[0] >> child[1];
+		input.push_back(make_pair(parent, child));	
 	}	
+	sort(input.begin(), input.end(), sortByparent);
 }
 void treeSearching()
 {
@@ -56,29 +53,34 @@ void treeSearching()
 void preorder(char _node) 
 {
 	unsigned char i = _node - 65;
+	char* _child = input[i].second;
 
 	if (_node == '.')
 		return ;
 	cout << (char)_node;
-	preorder(input[i][0]);
-	preorder(input[i][1]);
+	preorder(_child[0]);
+	preorder(_child[1]);
 }
 void inorder(char _node)
 {
 	unsigned char i = _node - 65;
+	char* _child = input[i].second;
+
 	if (_node == '.')
 		return ;
-	inorder(input[i][0]);
+	inorder(_child[0]);
 	cout << (char)_node;
-	inorder(input[i][1]);
+	inorder(_child[1]);
 }
 void postorder(char _node)
 {
 	unsigned char i = _node - 65;
+	char* _child = input[i].second;
+
 	if (_node == '.')
 		return ;
-	postorder(input[i][0]);
-	postorder(input[i][1]);
+	postorder(_child[0]);
+	postorder(_child[1]);
 	cout << (char)_node;
 }
 
