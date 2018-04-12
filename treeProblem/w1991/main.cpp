@@ -15,6 +15,14 @@ void preorder(char _node);
 void inorder(char _node);
 void postorder(char _node);
 
+void printVector()
+{
+	for (vector < node >::iterator it = input.begin();
+			it != input.end(); ++it)
+	{
+		cout << it.first << endl;
+	}
+}
 /* var */
 vector < node > input;
 
@@ -37,7 +45,9 @@ void input_read()
 		cin >> parent >> child[0] >> child[1];
 		input.push_back(make_pair(parent, child));	
 	}	
+	printVector();
 	sort(input.begin(), input.end(), sortByparent);
+	printVector();
 }
 void treeSearching()
 {
