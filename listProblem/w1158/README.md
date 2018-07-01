@@ -1,5 +1,5 @@
 # Problem
-- There are N people on circlce table. And we will get rid of M_th person. Then this game is starting from (M + 1)_th.
+- There are N people on circlce table. And we will get rid of M_th person. Then this game is starting from (M + 1)th.
 - If ther is no person on table, it will be over.
 # Condition
 - 1 <= M <= N <= 5,000
