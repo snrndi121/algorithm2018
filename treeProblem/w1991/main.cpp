@@ -6,7 +6,7 @@ using namespace std;
 /* To sovle this */
 /*
  * You need to know about traversals of tree. It is simple.
- * As you know, the each order of searchi is below.
+ * As you know, the each order of search is below.
  * _(1) Preorder : root -> left child -> right childi_
  * _(2) Inorder : left child -> root > right child_
  * _(3) Postorder : left child -> right child -> root_
