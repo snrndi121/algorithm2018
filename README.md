@@ -1,7 +1,28 @@
 # Algorithm2018
  - Solve problems together from BAEKJOON (https://www.acmicpc.net)
 
-# Commit message 
+# Base code
+```
+#include <iostream>
+
+using namespace std;
+
+void read_input()
+{
+
+}
+void write_output()
+{
+
+}
+int main()
+{
+    read_input();
+    write_output();
+    return 0;
+}
+```
+# Commit message
 
  - solve **contents** : when you just solved regardless of style, data structure etc.
  - style **contents** : when you modified code style from a base sources and got type missing fixed
