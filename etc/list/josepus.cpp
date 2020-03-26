@@ -1,16 +1,18 @@
 #include <iostream>
+#include <time.h>
+#include <stdio.h>
 
 using namespace std;
 //def
-#define MAX_N 10
-#define MAX_K 3
+#define MAX_N 1000
+#define MAX_K 500
 //func
 typedef struct mlistNode
 {
     int id;
     mlistNode* prev, *next;
     mlistNode* operator++() {
-        return this->next;
+        return next;
     }
 }litsNode;
 
@@ -33,14 +35,15 @@ typedef struct mlist
     }
     mlistNode* erase(int tar)
     {
-        cout << "> tar : " << tar << endl;
-        mlistNode* it = first->next;
+        mlistNode* it = first;
         for (; it != NULL; it = it->next) {
             if (tar == it->id) {
-                cout << " > tar :" << tar << " found!!!" << endl;
-                it->prev->next = it->next;
-                if (it->next != NULL)//현재가 마지막 요소가 아니라면
-                  it->next->prev = it->prev;
+                //이전 노드의 next를 현 노드의 next
+                it->prev->next = it->next;//it->next가 null이면 null대로 할당됨
+                //현재가 마지막 요소가 아니라면
+                if (it->next != NULL) {
+                    it->next->prev = it->prev;//현 노드의 다음 노드의 prev를 현 노드의 prev로
+                }
                 break;
             }
         }
@@ -48,14 +51,14 @@ typedef struct mlist
     }
     void printList()
     {
-        cout << "\n>> check List element (" << MAX_N << ")" << endl;
+        cout << ">> check List element (" << MAX_N << ")" << endl;
         for (mlistNode* it = first->next; it != NULL; it = it->next)
           cout << it->id << ' ';
         cout << endl;
     }
     void printList_reverse()
     {
-        cout << "\n>> check List element (" << MAX_N << ")" << endl;
+        cout << ">> check List element (" << MAX_N << ")" << endl;
         mlistNode* it, *last_it;
         for (it = first->next; it != NULL; it = it->next) {
           last_it = it;
@@ -65,41 +68,121 @@ typedef struct mlist
           cout << it->id << ' ';
         cout << endl;
     }
+    mlist copy()
+    {
+        mlist res;
+        for (mlistNode* it = this->first->next;
+            it != NULL; it = it->next) {
+            res.add(it->id);
+        }
+        return res;
+    }
     mlistNode* first = new mlistNode;
 }mlist;
 //var
 mlist ml;
-
+mlistNode *lastman1, *lastman2;
+int in_n, in_k;
 void read_input()
 {
-    for (int i = 1; i <= MAX_N; ++i)
+    cout << ">> type n :"; cin >> in_n;
+    cout << ">> type k :"; cin >> in_k;
+    for (int i = 1; i <= in_n; ++i)
       ml.add(i);
-    ml.printList();
+    // ml.printList();
 }
-void write_output()
+void write_output(double t)
 {
+    cout << "\n\n# runtime :" << t / CLOCKS_PER_SEC<< endl;
+    cout << "# lastman_pair = (" << lastman1->id << ", " << lastman2->id << ")" << endl;
+}
+/*
+n 10000,
+k = 50 -> 0.107
+k = 100 -> 0.111
+k = 200 -> 0.114
+k = 400 -> 0.124
+k = 800 -> 0.145
+k = 1600 -> 0.186
+k = 3200 -> 0.266
+k = 6400 -> 0.419
+k = 12800 -> 0.730
 
-}
-void solve_josepus()
+*/
+void solve1_josepus()
 {
-    int n = MAX_N;
-    mlistNode* kill = ml.first->next;
+    int n = in_n;
+    mlist ml_temp = ml.copy();
+    mlistNode* kill = ml_temp.first->next;
+    // cout << "processing now...\n";
     while (n > 2) {
+      // cout << "#";
       //병사를 죽임
-      kill = ml.erase(kill->id);
+      kill = ml_temp.erase(kill->id);
+
+      if (kill == NULL) { kill = ml_temp.first->next;}
       n--;
-      ml.printList();
+      // ml.printList();
       //kill 포인터 새로 설정
-      for (int i = 0; i < MAX_K - 1; ++i) {
-        kill++;
-        if (kill == NULL) { kill = ml.first->next;}
+      for (int i = 0; i < in_k - 1; ++i) {
+        kill = kill->next;
+        if (kill == NULL) { kill = ml_temp.first->next;}
       }
     }
+    lastman1 = ml_temp.first->next;
+    lastman2 = lastman1->next;
+}
+//K가 클 때 kill 포인터 조작방법
+/*
+n 10000
+k = 50 -> 0.107
+k = 100 -> 0.111
+k = 200 -> 0.114
+k = 400 -> 0.124
+k = 800 -> 0.145
+k = 1600 -> 0.186
+k = 3200 -> 0.266
+k = 6400 -> 0.419
+k = 12800 -> 0.730
+
+*/
+void solve2_josepus()
+{
+    int n = in_n;
+    mlist ml_temp = ml.copy();
+    mlistNode* kill = ml_temp.first->next;
+    // cout << "processing now...\n";
+    while (n > 2) {
+      // cout << "#";
+      //병사를 죽임
+      kill = ml_temp.erase(kill->id);
+
+      if (kill == NULL) { kill = ml_temp.first->next;}
+      n--;
+      //kill 포인터 새로 설정
+      int new_k = (in_k - 1) % n;
+      for (int i = 0; i < new_k; ++i) {
+        kill = kill->next;
+        if (kill == NULL) { kill = ml_temp.first->next;}
+      }
+    }
+    lastman1 = ml_temp.first->next;
+    lastman2 = lastman1->next;
 }
 int main()
 {
     read_input();
-    solve_josepus();
-    write_output();
+    //
+    clock_t start_t, end_t;
+    start_t = clock();
+    solve1_josepus();
+    end_t = clock();
+    write_output((double)(end_t - start_t));
+    //
+    start_t = clock();
+    solve2_josepus();
+    end_t = clock();
+    write_output((double)(end_t - start_t));
+
     return 0;
 }
