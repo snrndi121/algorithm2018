@@ -24,11 +24,12 @@ int main()
 ```
 # Commit message
 
- - solve **contents** : when you just solved regardless of style, data structure etc.
- - style **contents** : when you modified code style from a base sources and got type missing fixed
- - refactor **contents** : when you modified the most of codes and its structures.  
- - docs **contents** : when you changes or modified a README.md.
-
+ - solve **contents** : when it is solved regardless of style and data structure etc.
+ - feat **contents** : when sort of functions/method are added 
+ - style **contents** : when code style from a base sources is modified or type missing is fixed
+ - refactor **contents** : when the most of codes and its structures are chagned.  
+ - docs **contents** : when one of README.md is modified.
+ 
  **contents** : the content's form will be same normally, "category"_"number". If it is hard, then you can type its contents briefly.
 
 # Email
