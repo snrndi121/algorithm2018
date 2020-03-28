@@ -7,53 +7,61 @@
 
 using namespace std;
 //def
-#define FENCE_LEN 1000
+#define FENCE_LEN 10
 //var
-int *height, *left, *right;
+int *mheight, *mleft, *mright;
 
 //func
-bool cmpHeight(int i, int j) const {return height[i] < height[j]? i : j;}
 void read_input()
 {
-    height = new int[FENCE_LEN];
-    left = new int[FENCE_LEN];
-    right = new int[FENCE_LEN];
+    cout << "# read_input" << endl;
+    mheight = new int[FENCE_LEN];
+    mleft = new int[FENCE_LEN];
+    mright = new int[FENCE_LEN];
     srand(time(NULL));
-    for (int i = 0; i < FENCE_LEN; ++i) {
-        height[i] = rand() % FENCE_LEN + 1;
+    for (int i = 0; i < 10; ++i) {
+        mheight[i] = rand() % FENCE_LEN + 1;
     }
-    left[0] = -1;
+    mleft[0] = -1;
 }
 /*
   * sweepping
     - 맨 끝 지점에서 시작해서
     - 현재 i 번째 판자의 왼쪽과 비교해나간다.
-    - right가 결정되지 못 한 녀석은 스택에 넣는다.
+    - mright가 결정되지 못 한 녀석은 스택에 넣는다.
 */
 /*
 판자 배열 = {-1, 3, 5, 10, 4, 3, 3, 1, -1}
 */
 void solve_sweep()
 {
+    cout << "# solve_sweep" << endl;
     stack < int > determin_yet;
     for (int i = 1; i < FENCE_LEN; ++i) {
-        while (!determin_yet.empty() && height[i-1] >= height[i]) {
-          int prev_idx = determin_yet.pop();
-          if (height[prev_idx] < height[i]) {
-              determin_yet.push(prev_idx);
-          } else {
-              right [prev_idx] = i - 1;
-          }
+        //일단 스택에 넣는 행위는 맞지가 않음
+        int prev_idx = i -1;
+        //그 이전에
+        while (!determin_yet.empty() && mheight[prev_idx] >= mheight[i]) {
+            mright[prev_idx] = i - 1;
+            determin_yet.pop();
+            prev_idx = determin_yet.top();
+            if (mheight[prev_idx] < mheight[i]) {
+                determin_yet.push(prev_idx);
+            }
         }
-        if (height[i - 1] < height[i]) {
-            left[i] = i;
+        //스택에 추가함
+        if (mheight [prev_idx] < mheight[i]) {
+            mleft[i] = i;
             determin_yet.push(i);
         }
     }
 }
 void write_output()
 {
-
+    cout << "# write_output" << endl;
+    for (int i = 0; i < FENCE_LEN; ++i) {
+        cout << "(" << i << ")" << "mleft : " << mleft[i] << ", mright : " << mright[i] << endl;
+    }
 }
 int main()
 {
