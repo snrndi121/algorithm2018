@@ -9,7 +9,7 @@ using namespace std;
 //def
 #define FENCE_LEN 10
 //var
-int *mheight, *mleft, *mright;
+int *mheight, *mleft, *mright, *mwidth;
 
 //func
 void read_input()
@@ -18,11 +18,13 @@ void read_input()
     mheight = new int[FENCE_LEN];
     mleft = new int[FENCE_LEN];
     mright = new int[FENCE_LEN];
+    mwidth = new int[FENCE_LEN];
     srand(time(NULL));
     for (int i = 0; i < 10; ++i) {
         mheight[i] = rand() % FENCE_LEN + 1;
+        cout << mheight[i] << ' ';
     }
-    mleft[0] = -1;
+    mheight[0] = -1;
 }
 /*
   * sweepping
@@ -37,30 +39,34 @@ void solve_sweep()
 {
     cout << "# solve_sweep" << endl;
     stack < int > determin_yet;
+    int res = 0;
     for (int i = 1; i < FENCE_LEN; ++i) {
-        //일단 스택에 넣는 행위는 맞지가 않음
-        int prev_idx = i -1;
-        //그 이전에
-        while (!determin_yet.empty() && mheight[prev_idx] >= mheight[i]) {
-            mright[prev_idx] = i - 1;
+        while(!determin_yet.empty() && mheight[determin_yet.top()] >= mheight[i]) {
+            int j = determin_yet.top();
+            cout << "(" << mheight[ j ] << ", " << mheight[ i ] << ")" << endl;
             determin_yet.pop();
-            prev_idx = determin_yet.top();
-            if (mheight[prev_idx] < mheight[i]) {
-                determin_yet.push(prev_idx);
+            int width = -1;
+            if (determin_yet.empty()) {
+                cout << " > its left side is empty" << endl;
+                width = i;
+            } else {
+                cout << " > its left side exists" << endl;
+                width = (i - determin_yet.top() - 1);
             }
+            res = max(res, mheight[i] * width);
+            mwidth[i] = res;
         }
-        //스택에 추가함
-        if (mheight [prev_idx] < mheight[i]) {
-            mleft[i] = i;
-            determin_yet.push(i);
-        }
+        cout << ">> new val(" << mheight[i] << ") is added" << endl;
+        determin_yet.push(i);
     }
+    cout << " answer : " << res << endl;
 }
 void write_output()
 {
     cout << "# write_output" << endl;
     for (int i = 0; i < FENCE_LEN; ++i) {
-        cout << "(" << i << ")" << "mleft : " << mleft[i] << ", mright : " << mright[i] << endl;
+        // cout << "(" << mheight[i] << ")" << "mleft : " << mleft[i] << ", mright : " << mright[i] << endl;
+        cout << "(" << mheight[i] << ") width :" << mwidth[i] << endl;
     }
 }
 int main()
