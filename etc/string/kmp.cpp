@@ -41,6 +41,13 @@ vector <int > getPartialMatch(const string& N)
     }
     return pi;
 }
+vector <int > getPartialMatchByKMP(const string& N)
+{
+    int m = N.size();
+    vector < int > pi(m, 0);
+    
+    return pi;
+}
 vector < int > kmp1()
 {
     vector < int > pi = getPartialMatch(_N);
