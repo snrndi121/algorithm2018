@@ -22,30 +22,62 @@ using namespace std;
   * 문제 = "특정 문자 찾기"
   * 특이점 = "getline 사용"
 */
-string read_input()
+char* read_input()
 {
-  string _in;
+  char _arg[1000001];
   getline(cin, _in);
   return _in;
 }
-int solve(string _arg)
+/*
+-> 런타임 에러
+#include <iostream>
+
+using namespace std;
+
+int main()
 {
-  /* coutn null */
-  int res = 0;
-  const int exception[2] = {0, _arg.size() - 1};
+    char _arg[1000001];
+    getline(cin, _arg);
+    int res = 0;//결과값
+    //예외처리
+
+    //공백찾기 시작
+    for (int begin = 0; begin < _arg.size(); ++begin) {
+        if (_arg[begin] == ' ')
+        { res++;}
+    }
+    res += 1;
+    //exception
+    if (_arg[0] == ' ') {res--;}
+    if (_arg[_arg.size() - 1] == ' ') { res--;}
+    return res;
+}
+*/
+int solve(char* _arg)
+{
+  int res = 0;//결과값
+  //예외처리
+
+  //공백찾기 시작
   for (int begin = 0; begin < _arg.size(); ++begin) {
-      if (_arg[begin] == ' '
-      && begin != exception[0]
-      && begin != exception[1]) { res++;}
+      if (_arg[begin] == ' ')
+      // && begin != exception[0]
+      // && begin != exception[1])
+      { res++;}
   }
-  return res + 1;
+  res += 1;
+  //exception
+  if (_arg[0] == ' ') {res--;}
+  if (_arg[_arg.size() - 1] == ' ') { res--;}
+  // if (exception[2]) { return 0;}
+  return res;
 }
 void write_output(int _arg)
 {
   cout << _arg;
 }
 int main() {
-  string _in = read_input();
+  char* _in = read_input();
   int _res = solve(_in);
   write_output(_res);
   return 0;
