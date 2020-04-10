@@ -9,7 +9,7 @@ using namespace std;
   * 한 단어 내에 문자가 나오다가 끊기면 그룹 단어가 아니다.
   * aba (x) a (o), ab(o), abc(o), bzb(x)
 */
-int solve()
+int main()
 {
     int N; cin >> N;
     string *_input = new string[N]; for (int i = 0; i < N; ++i) cin >> _input[i];
