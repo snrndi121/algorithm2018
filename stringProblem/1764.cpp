@@ -20,10 +20,7 @@ int main()
     //입력
     int N, M; cin >> N >> M;int inSize = N + M;
     char** namelist = new char*[inSize];//2차원배열
-    for (int i = 0 ; i < inSize; ++i) {char* buffer = new char[21]; cin >> buffer; namelist[i] = buffer;}
-    char buffer[20] = "dfdf";
-    cout << buffer << endl;
-    flush(buffer);
+    for (int i = 0 ; i < inSize; ++i) {char* buffer = new char[21]; cin >> buffer; namelist[i] = buffer
     // 전처리
     sort(namelist, namelist+inSize, cmp);
     //로직 (1)
