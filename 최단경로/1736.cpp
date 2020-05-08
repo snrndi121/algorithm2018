@@ -3,11 +3,15 @@
 #include <queue>
 using namespace std;
 
+/*
+  * 백준 : 시간 초과
+*/
 #define INF 293012932
 int V, E, S0;
 
 int main()
 {
+    /* solution1 */
     // 입력 및 초기화
     cin >> V >> E >> S0;
     vector < pair < int, int > > adj[V];//(u, v) u에서 v로의 weight
@@ -36,7 +40,7 @@ int main()
               dist[v] = dist[v] < cost? dist[v] : cost;
           }
     }
-    //
+    /* solution2 */
     // priority_queue < pair <int, int> > pq;//(u, v) v까지의 현재 최단 경로
     // pq.push(make_pair(0, S0-1));
     // // cout << " ## searching start ## " << endl;
