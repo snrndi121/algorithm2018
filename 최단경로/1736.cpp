@@ -6,7 +6,8 @@ using namespace std;
 /*
   * 백준 : 시간 초과
 */
-#define INF 293012932
+unsigned long long INF = ((unsigned long long)100000 * 100000);
+
 int V, E, S0;
 
 int main()
@@ -14,17 +15,17 @@ int main()
     /* solution1 */
     // 입력 및 초기화
     cin >> V >> E >> S0;
-    vector < pair < int, int > > adj[V];//(u, v) u에서 v로의 weight
-    vector < int > dist(V, INF);//(u, v) 간선에서 v에서의 최단경로
+    vector < pair < int, unsigned long long > > adj[V];//(u, v) u에서 v로의 weight
+    vector < unsigned long long > dist(V, INF);//(u, v) 간선에서 v에서의 최단경로
     dist[S0-1] = 0;
     for (int i = 0; i < E; ++i) {
-        int u,v,w; cin >> u >> v >> w;
+        int u,v;unsigned long long w; cin >> u >> v >> w;
         adj[u-1].push_back(make_pair(v-1, w));
     }
     vector < bool > visited(V, false);
     visited[S0-1] = false;
     while (true) {
-          int closest=INF, u;
+          unsigned long long closest=INF;int u;
           for (int i = 0; i < V; ++i) {
               if (dist[i] < closest && !visited[i]) {
                   u = i;
@@ -36,7 +37,7 @@ int main()
           for (int i=0; i < adj[u].size(); ++i) {
               int v=adj[u][i].first;
               if (visited[v]) { continue;}
-              int cost = dist[u] + adj[u][i].second;
+              unsigned long long cost = dist[u] + adj[u][i].second;
               dist[v] = dist[v] < cost? dist[v] : cost;
           }
     }
