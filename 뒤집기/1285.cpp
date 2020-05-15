@@ -28,8 +28,8 @@ int main()
   	}
     //풀이
     int ans = N * N;
-    //N by N, 에서 K는 대각선 단우로 실행되는 녀석쯤으로 해석
-    for (int k = 0; k < (1 << N); k++) {// 각 행에 대해서 뒤집을지?
+    //K, 뒤집는 횟수 
+    for (int k = 0; k < (1 << N); k++) {
         int sum = 0;
         //하나의 열에 대하여
         for (int col = 0; col < N; col++) {
@@ -37,16 +37,14 @@ int main()
             //col형에 대하여 각 row를 뒤집어봄
             for (int row = 0; row < N; row++) {
                 char state = coin[row][col];//현재 뒤집힌 상태
-                if ((1 << row) & k) {//뒤집을 조합을 만들어내는 부분
-                    //op.flip
+                //뒤집을 조합을 만들어내는 부분
+                if ((1 << row) & k) {//뒤집기 시행
                     if (state == 'T') state = 'H';
                     else state = 'T';
                 }
-                //어는 조건 하에 변환 후
                 //현재 뒷면이면 뒷면 수를 카운트함
                 if (state == 'T') nowT++;
             }
-            // 이 열을 뒤집는게 이득인지
             /*
               * nowT는 현재 뒤집혀 있는 T임
               * N - nowT는 그것의 역이라고 보면됨.
