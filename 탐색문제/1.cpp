@@ -20,6 +20,7 @@ i_vtype answer;
 int CVT_SIZE;
 
 /*
+- input
 6
 ox oo 3
 ox xo 2
@@ -54,16 +55,16 @@ void input()
     //init
     for (int i = 0; i < testcase; ++i) { answer.push_back(INT_MAX);}
 }
-ii_pvtype getCandidateCVT(string& src, int start)
+ii_pvtype getCandidateCVT(ss_ptype& src, int start)
 {
     ii_pvtype res;
-    string tar = src.substr(start, CVT_SIZE);
-    //cvt_matrix 순회
+    string left = src.first.substr(start, CVT_SIZE), right = src.second.substr(start, CVT_SIZE);
+    //cvt_matrix 占쏙옙회
     for (int i = 0; i < cvt_matrix.size(); ++i) {
-        if (cvt_matrix[i].first == tar) {//convert to Right
+        if (cvt_matrix[i].first == left && cvt_matrix[i].second == right) {//convert to Right
             res.push_back(make_pair(i, 1));
         }
-        else if (cvt_matrix[i].second == tar) {//convert to left
+        else if (cvt_matrix[i].first == right && cvt_matrix[i].second == left) {//convert to left
             res.push_back(make_pair(i, 0));
         }
     }
@@ -71,46 +72,38 @@ ii_pvtype getCandidateCVT(string& src, int start)
 }
 int dfs(ss_ptype tar, int cost)//( (source, target), cur_index, cost)
 {
+    static int depth = 0 ;
     cout << "\n > src :" << tar.first;
     cout << "\n > tar :" << tar.second << endl;
     //escape-condition
     int left = tar.first.size();
-    if (left == 0) { return 1;}
-    //다른 지점 찾기
     int here = 0;
     for (; here < left && tar.first[here] == tar.second[here]; ++here){;}
     if (here == left) { return cost;}
 
     //recursive-start
     string new_src = tar.first;
-    cout << " > origin_src :" << new_src << endl;
-    ii_pvtype cvt_list = getCandidateCVT(new_src, here - 1);//(source, start_index)
-    cout << "#can :" << cvt_list.size() << " possible now" << endl;
+    ii_pvtype cvt_list = getCandidateCVT(tar, here - 1);//(source, start_index)
+    int local_max = INT_MAX;
     for (ii_pvtype::iterator it = cvt_list.begin(); it != cvt_list.end(); ++it) {
         //치환
         string token = it->second == 0? cvt_matrix[it->first].first : cvt_matrix[it->first].second;
-        new_src.replace(here, CVT_SIZE, token);
-        cout << " > cvt To:" << new_src << endl;
+        new_src.replace(here - 1, CVT_SIZE, token);
         cost += cvt_weight[it->first];
-        int left_sz = tar.first.size() - here;
-        int res = dfs(make_pair(new_src.substr(here, left_sz), tar.second.substr(here, left_sz)), cost);
+        int left_sz = tar.first.size() - here + 1;
+        int res = dfs(make_pair(new_src.substr(here - 1, left_sz), tar.second.substr(here - 1, left_sz)), cost);
         if (res > 0) {
-            return cost;
+            return res;
         }
     }
-    cout << "> matrix failed \n";
-    return 0;
+    return local_max;
 }
 void solution()
 {
-    cout << "s" << endl;
-    //전체 테스크 케이스 순회
     for (int i = 0; i < cvt_tar.size(); ++i) {
-        //가능한 집합 고려
-        cout << "> cycle start" << endl;
+        cout << "\n # cycle start" << endl;
         int res = dfs(cvt_tar[i], 0);//( (source, target), cur_index, cost)
-        //i_vtype cost;
-        if (res == 0) { cout << "  > failed" << endl;}
+        if (res == INT_MAX) { cout << "  > failed" << endl;}
         else { answer[i] = res; }//sucostccess
     }
 }
@@ -125,4 +118,3 @@ int main()
     solution();
     ouput();
 }
-
